@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # The repository has no go.mod (dep, Gopkg.toml), so it builds in GOPATH mode.
+  GO111MODULE: "off"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+          # This Gitea runner has no Actions cache service.
+          cache: false
+      - name: Place the checkout in GOPATH
+        run: |
+          pkg="$RUNNER_TEMP/gopath/src/github.com/tjamet/powerline-go-datadog"
+          mkdir -p "$(dirname "$pkg")"
+          ln -s "$GITHUB_WORKSPACE" "$pkg"
+          echo "GOPATH=$RUNNER_TEMP/gopath" >> "$GITHUB_ENV"
+          echo "PKG=$pkg" >> "$GITHUB_ENV"
+      - name: Formatting
+        run: |
+          cd "$PKG"
+          files=$(find . -name '*.go' -not -path './vendor/*' -print0 | xargs -0 gofmt -l)
+          if [ -n "$files" ]; then
+            printf 'Files needing gofmt:\n%s\n' "$files"
+            exit 1
+          fi
+      - name: Vet
+        run: cd "$PKG" && go vet ./...
+      - name: Build
+        run: cd "$PKG" && go build ./...
+      - name: Test
+        run: cd "$PKG" && go test ./...
