@@ -7,5 +7,5 @@ require (
 	github.com/jdxcode/netrc v1.0.0
 	github.com/justjanne/powerline-go v1.14.0
 	github.com/stretchr/testify v1.12.1 // indirect
-	github.com/zorkian/go-datadog-api v2.18.0+incompatible
+	github.com/zorkian/go-datadog-api v2.30.0+incompatible
 )
