@@ -8,14 +8,16 @@ Inspired from [i3blocks-datadog](https://github.com/alanbover/i3blocks-datadog)
 
 ### 0. Prerequisite
 
-Use a custom [powerline-go](https://github.com/tjamet/powerline-go/) project that supports plugins
+Use [powerline-go](https://github.com/justjanne/powerline-go/) with plugin support (the
+`tjamet/powerline-go` fork this plugin was written against no longer exists; the plugin is built
+against upstream v1.14.0, the oldest release that provides the `powerline` package)
 
 ### 1. Build the application
 First of all, you will need to build the project. For this, just execute:
 
 ```
-go get -u github.com/tjamet/powerline-go-datadog
-go build -o /usr/local/bin/powerline-go-datadog
+go install github.com/tjamet/powerline-go-datadog@latest
+sudo cp "$(go env GOPATH)/bin/powerline-go-datadog" /usr/local/bin/
 ```
 
 Ensure you have `/usr/local/bin/` in your `$PATH`
